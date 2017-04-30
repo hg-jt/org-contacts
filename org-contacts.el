@@ -914,7 +914,7 @@ address."
              (email-list (org-entry-get pom org-contacts-email-property))
              (gravatar
               (when email-list
-                (loop for email in (org-contacts-split-property email-list)
+                (cl-loop for email in (org-contacts-split-property email-list)
                       for gravatar = (gravatar-retrieve-synchronously (org-contacts-strip-link email))
                       if (and gravatar
                               (not (eq gravatar 'error)))
@@ -956,9 +956,9 @@ address."
 
 (defun erc-nicknames-list ()
   "Return all nicknames of all ERC buffers."
-  (loop for buffer in (erc-buffer-list)
+  (cl-loop for buffer in (erc-buffer-list)
 	nconc (with-current-buffer buffer
-		(loop for user-entry in (mapcar 'car (erc-get-channel-user-list))
+		(cl-loop for user-entry in (mapcar 'car (erc-get-channel-user-list))
 		      collect (elt user-entry 1)))))
 
 (add-to-list 'org-property-set-functions-alist
@@ -1070,7 +1070,7 @@ is created and the VCard is written into that buffer."
     (fundamental-mode)
     (when (fboundp 'set-buffer-file-coding-system)
       (set-buffer-file-coding-system coding-system-for-write))
-    (loop for contact in (org-contacts-filter name)
+    (cl-loop for contact in (org-contacts-filter name)
 	  do (insert (org-contacts-vcard-format contact)))
     (if to-buffer
 	(current-buffer)
